@@ -94,7 +94,7 @@ def _map_line_to_json(item):
 
 # open file, parse, pass to json mapper
 def load_data(data_folder):
-    tar = os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf.tar")
+    tar = tarfile.open(os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf.tar"))
     tar.extractall(data_folder)
     tar.close()
     input_fn = os.path.join(data_folder,"Kaviar-160204-Public-hg19.vcf")
