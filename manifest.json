@@ -1,0 +1,11 @@
+{
+    "version": "0.1",
+    "dumper" : {
+        "data_url" : "http://s3-us-west-2.amazonaws.com/kaviar-160204-public/Kaviar-160204-Public-hg19.vcf.tar",
+        "uncompress" : true
+    },
+    "uploader" : {
+        "parser" : "parser:load_data",
+        "ignore_duplicates" : false
+    }
+}
