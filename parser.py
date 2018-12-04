@@ -9,6 +9,7 @@ import json
 from tempfile import mkstemp
 import subprocess
 import vcf
+import tarfile
 
 VALID_COLUMN_NO = 8
 
@@ -93,6 +94,9 @@ def _map_line_to_json(item):
 
 # open file, parse, pass to json mapper
 def load_data(data_folder):
+    tar = os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf.tar")
+    tar.extractall(data_folder)
+    tar.close()
     input_fn = os.path.join(data_folder,"Kaviar-160204-Public-hg19.vcf")
     vcf_reader = vcf.Reader(open(input_fn, 'r'), strict_whitespace=True)
     json_rows = map(_map_line_to_json, vcf_reader)
