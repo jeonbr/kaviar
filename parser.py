@@ -8,6 +8,7 @@ from itertools import groupby, chain
 import json
 from tempfile import mkstemp
 import subprocess
+import vcf
 
 VALID_COLUMN_NO = 8
 
