@@ -10,6 +10,7 @@ from tempfile import mkstemp
 import subprocess
 import vcf
 import tarfile
+import gzip, shutil
 
 VALID_COLUMN_NO = 8
 
@@ -97,6 +98,10 @@ def load_data(data_folder):
     tar = tarfile.open(os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf.tar"))
     tar.extractall(data_folder)
     tar.close()
+    with gzip.open(os.path.join(data_folder, "Kaviar-160204-Public", "vcfs", "Kaviar-160204-Public-hg19.vcf.gz"), 'r' ) as f_in:
+        with open(os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf"), 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)    
+    
     input_fn = os.path.join(data_folder,"Kaviar-160204-Public-hg19.vcf")
     vcf_reader = vcf.Reader(open(input_fn, 'r'), strict_whitespace=True)
     json_rows = map(_map_line_to_json, vcf_reader)
