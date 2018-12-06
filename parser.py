@@ -101,25 +101,25 @@ def load_data(data_folder):
     with gzip.open(os.path.join(data_folder, "Kaviar-160204-Public", "vcfs", "Kaviar-160204-Public-hg19.vcf.gz"), 'r' ) as f_in:
         with open(os.path.join(data_folder, "Kaviar-160204-Public-hg19.vcf"), 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)    
-    
+                                         
     input_fn = os.path.join(data_folder,"Kaviar-160204-Public-hg19.vcf")
     vcf_reader = vcf.Reader(open(input_fn, 'r'), strict_whitespace=True)
     json_rows = map(_map_line_to_json, vcf_reader)
     json_rows = chain.from_iterable(json_rows)
 
-    fd_before_sort, temp_path_before_sort = mkstemp()
-    fd_after_sort, temp_path_after_sort = mkstemp()    
+    fd_before_sort, temp_path_before_sort = mkstemp(dir=data_folder)
+    fd_after_sort, temp_path_after_sort = mkstemp(dir=data_folder)    
 
     with open(temp_path_before_sort, "w") as f:
         dbwriter = csv.writer(f)
         for doc in json_rows:
             dbwriter.writerow([doc['_id'], json.dumps(doc)]) 
 
-    os.close(fd_before_sort)
     popen_str = 'sort {} > {}'.format(temp_path_before_sort, temp_path_after_sort)
     p = subprocess.Popen(popen_str, shell=True)
     os.waitpid(p.pid, 0)
-
+    os.close(fd_before_sort)
+    
     json_rows = csv.reader(open(temp_path_after_sort))
     json_rows = (json.loads(row[1]) for row in json_rows)
     row_groups = (it for (key, it) in groupby(json_rows, lambda row: row["_id"]))
