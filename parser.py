@@ -117,8 +117,13 @@ def load_data(data_folder):
                     dbwriter.writerow([doc['_id'], json.dumps(doc)])
 
         csvsort(tmp_path, [0,])
-
-        with open(tmp_path) as csvfile:
+        
+        with open(tmp_path, 'rb') as f_in:
+            with gzip.open(tmp_path + '.gz', 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        os.remove(tmp_path)   
+        
+        with gzip.open(tmp_path+'.gz') as csvfile:
             json_rows = csv.reader(csvfile)
             json_rows = (json.loads(row[1]) for row in json_rows)
             row_groups = (it for (key, it) in groupby(json_rows, lambda row: row["_id"]))
@@ -128,7 +133,7 @@ def load_data(data_folder):
             yield res
 
     finally:
-        os.remove(tmp_path)
+        os.remove(tmp_path+'.gz')
         os.remove(input_fn)
 
 
