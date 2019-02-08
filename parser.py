@@ -123,7 +123,7 @@ def load_data(data_folder):
                 shutil.copyfileobj(f_in, f_out)
         os.remove(tmp_path)   
         
-        with gzip.open(tmp_path+'.gz') as csvfile:
+        with gzip.open(tmp_path+'.gz', mode="rt") as csvfile:
             json_rows = csv.reader(csvfile)
             json_rows = (json.loads(row[1]) for row in json_rows)
             row_groups = (it for (key, it) in groupby(json_rows, lambda row: row["_id"]))
