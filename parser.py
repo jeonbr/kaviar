@@ -10,7 +10,7 @@ from tempfile import mkstemp
 import vcf
 import tarfile
 import gzip, shutil
-from .csvsort import csvsort 
+from csvsort import csvsort 
 
 VALID_COLUMN_NO = 8
 
