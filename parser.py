@@ -125,7 +125,7 @@ def load_data(data_folder):
         
         with gzip.open(tmp_path+'.gz', mode="rt") as csvfile:
             json_rows = csv.reader(csvfile)
-            json_rows = (json.loads(row[1]) for row in json_rows)
+            json_rows = (json.loads(row[1]) for row in json_rows if row)
             row_groups = (it for (key, it) in groupby(json_rows, lambda row: row["_id"]))
             json_rows = (merge_duplicate_rows(rg, "kaviar") for rg in row_groups)
         
